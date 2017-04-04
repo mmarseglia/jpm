@@ -51,11 +51,16 @@ module JPM
   end
 
   def self.repository_path
-    return File.join(self.home_dir, 'update-center.json')
+#    return File.join(self.home_dir, 'update-center.json')
+    return File.join(self.home_dir, 'updates/cje-offline.json')
   end
 
   def self.update_center_url
     return "http://updates.jenkins-ci.org/update-center.json"
+  end
+
+  def self.download_url
+	return "https://updates.jenkins-ci.org/latest/"
   end
 
   def self.fetch(uri_str, limit = 10)

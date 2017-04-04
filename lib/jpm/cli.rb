@@ -1,5 +1,6 @@
 require 'paint'
 require 'thor'
+require 'pry'
 
 require 'jpm'
 require 'jpm/catalog'
@@ -42,12 +43,16 @@ module JPM
       require_jenkins!
 
       if JPM.has_plugins?
-        plugins = JPM.plugins.sort do |x, y|
-          x[:name] <=> y[:name]
-        end
-        plugins.each do |plugin|
-          say(" - #{plugin[:name]} (#{plugin[:version]})")
-        end
+        #plugins = JPM.plugins.sort do |x, y|
+          #x[:name] <=> y[:name]
+          plugins = JPM.plugins.sort
+          plugins.each do |plugin|
+		say(" - #{plugin}")
+	end
+ #       end
+#        plugins.each do |plugin|
+ #         say(" - #{plugin[:name]} (#{plugin[:version]})")
+ #       end
       else
         say 'No plugins found'
       end
@@ -117,8 +122,12 @@ module JPM
         end
       end
 
-
+	say  "Getting ready to install...\n\n"
+	names.each do |name|
+		say "- #{name}\n"
+	end
       computed = catalog.compute(names)
+	Pry::ColorPrinter.pp(computed)
       catalog.install(computed) do |success, plugin|
         say "Installing #{plugin.name} v#{plugin.version} ...\n"
         installed << plugin

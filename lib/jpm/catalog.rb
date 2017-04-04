@@ -120,7 +120,8 @@ module JPM
         raise JPM::Errors::InvalidCatalogError if (buffer.nil? || buffer.empty?)
         buffer = buffer.split("\n")
         # Trim off the first and last lines, which are the JSONP gunk
-        buffer = buffer[1 ... -1]
+        # This is not needed with the cje-updates.json file
+   #     buffer = buffer[1 ... -1]
 
         data = JSON.parse(buffer.join("\n"))
         plugins = data['plugins']
@@ -148,7 +149,7 @@ module JPM
     # @param [JPM::Plugin] plugin
     # @return [Boolean] True if the plugin was successfully downloaded
     def download(plugin)
-      response = JPM.fetch(plugin.url)
+      response = JPM.fetch(URI::join(JPM.download_url, plugin.url))
       filename = File.basename(plugin.url)
 
       return save_plugin(filename, response.body)
