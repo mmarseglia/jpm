@@ -38,23 +38,24 @@ module JPM
       end
     end
 
-    desc 'list', "List the installed Jenkins plugins"
-    def list
+    desc 'list TERM', "List the installed Jenkins plugins. Optionaly pass TERM to check one plugin."
+    def list(term)
       require_jenkins!
 
       if JPM.has_plugins?
-        #plugins = JPM.plugins.sort do |x, y|
-          #x[:name] <=> y[:name]
-          plugins = JPM.plugins.sort
-          plugins.each do |plugin|
-		say(" - #{plugin}")
-	end
- #       end
-#        plugins.each do |plugin|
- #         say(" - #{plugin[:name]} (#{plugin[:version]})")
- #       end
+        results = JPM.plugins.sort
       else
-        say 'No plugins found'
+        results = false
+      end
+
+      if term.empty?
+        say("#{results}")
+      else
+        results.each do |result|
+          if result == term
+            say("#{term} is installed")
+          end
+        end
       end
     end
 

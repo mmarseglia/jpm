@@ -20,4 +20,5 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency('thor', '~> 0.18')
   gem.add_dependency('paint', '~> 0.8')
+  gem.add_dependency('pry')
 end

@@ -3,6 +3,7 @@ PATH
   specs:
     jpm (1.0.0)
       paint (~> 0.8)
+      pry
       thor (~> 0.18)
 
 GEM
