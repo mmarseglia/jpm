@@ -33,7 +33,9 @@ module JPM
     return true
   end
 
-  def self.plugins
+  # @param  [String] Plugin to look for, if installed
+  # @return [Array] List of installed plugins
+  def self.plugins(query)
     return [] unless self.has_plugins?
     plugins = []
     Dir.entries(self.plugins_dir).each do |plugin|
@@ -45,7 +47,13 @@ module JPM
       # Without an unpacked plugin directory, we can't find a version
       next unless File.directory?(plugin_dir)
 
-      plugins << plugin
+      if query.to_s.empty?
+        plugins << plugin
+      elsif plugin.casecmp(query) == 0
+        plugins << plugin
+        break
+      end
+        
     end
     return plugins
   end

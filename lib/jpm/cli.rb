@@ -40,24 +40,21 @@ module JPM
 
     desc 'list TERM', "List the installed Jenkins plugins. Optionaly pass TERM to check one plugin."
     def list(term)
+      # Ensure Jenkins is installed
       require_jenkins!
 
+      # Are plugins installed
       if JPM.has_plugins?
-        results = JPM.plugins.sort
+        results = JPM.plugins(term).sort
       else
-        results = false
+        say("No plugins installed.")
       end
-
-      if term.empty?
-        say("#{results}")
-      else
-        results.each do |result|
-          if result == term
-            say("#{term} is installed")
-          end
-        end
+      
+      results.each do |result|
+        say("#{result} is installed")
       end
     end
+
 
     desc 'search TERM', 'Search for available plugins'
     def search(term)
@@ -123,19 +120,28 @@ module JPM
         end
       end
 
-	say  "Getting ready to install...\n\n"
-	names.each do |name|
-		say "- #{name}\n"
-	end
+    	say "Getting ready to install...\n"
+    	names.each do |name|
+    		say "- #{name}\n"
+    	end
+
       computed = catalog.compute(names)
-	Pry::ColorPrinter.pp(computed)
+      #Pry::ColorPrinter.pp(computed)
       catalog.install(computed) do |success, plugin|
-        say "Installing #{plugin.name} v#{plugin.version} ...\n"
-        installed << plugin
+        if success == -1
+          say "#{plugin.name} is already installed ...\n"
+        else
+          say "Installing #{plugin.name} v#{plugin.version} ...\n"
+          installed << plugin
+        end
       end
 
-      installed = installed.map { |p| "#{p.title} v#{p.version}" }
-      say "\n#{installed.join(', ')} will be loaded on the next restart of Jenkins!"
+      if installed.empty?
+        say "Nothing installed.\n"
+      else
+        installed = installed.map { |p| "#{p.title} v#{p.version}" }
+        say "\n#{installed.join(', ')} will be loaded on the next restart of Jenkins!"
+      end
     end
   end
 end

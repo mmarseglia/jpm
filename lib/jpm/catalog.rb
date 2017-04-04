@@ -75,17 +75,14 @@ module JPM
     # @yield [JPM::Plugin] An instance of the installed plugin
     # @return [Boolean] True if all plugins were installed successfully
     def install(computed_list)
-      my_cli = JPM::CLI.new
-
       computed_list.each do |plugin|
-        if my_cli.list(plugin.name)
-          status = download(plugin)         
-          yield status, plugin
+        if JPM.plugins(plugin.name)
+          yield -1, plugin
         else
-          say "#{plugin} is already installed"
+          status = download(plugin)
+          yield status, plugin
         end
       end
-
       return true
     end
 
