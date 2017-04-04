@@ -4,6 +4,7 @@ require 'json'
 require 'jpm'
 require 'jpm/errors'
 require 'jpm/plugin'
+require 'jpm/cli'
 
 module JPM
   class Catalog
@@ -74,9 +75,15 @@ module JPM
     # @yield [JPM::Plugin] An instance of the installed plugin
     # @return [Boolean] True if all plugins were installed successfully
     def install(computed_list)
+      my_cli = JPM::CLI.new
+
       computed_list.each do |plugin|
-        status = download(plugin)
-        yield status, plugin
+        if my_cli.list(plugin.name)
+          status = download(plugin)         
+          yield status, plugin
+        else
+          say "#{plugin} is already installed"
+        end
       end
 
       return true
