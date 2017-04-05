@@ -76,11 +76,14 @@ module JPM
     # @return [Boolean] True if all plugins were installed successfully
     def install(computed_list)
       computed_list.each do |plugin|
-        if JPM.plugins(plugin.name)
-          yield -1, plugin
-        else
+        #puts "Installing #{plugin.name}\n"
+        if JPM.plugins(plugin.name).empty?
+          #puts "Download and install #{plugin.name}\n"
           status = download(plugin)
           yield status, plugin
+        else
+          #puts "Return of jpm.plugins #{JPM.plugins(plugin.name)}\n"
+          yield -1, plugin
         end
       end
       return true

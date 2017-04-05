@@ -38,6 +38,9 @@ module JPM
   def self.plugins(query)
     return [] unless self.has_plugins?
     plugins = []
+
+    #puts "This query #{query} and to string #{query.to_s}"
+
     Dir.entries(self.plugins_dir).each do |plugin|
       # Skip useless directories
       next if (plugin == '..')
@@ -48,8 +51,10 @@ module JPM
       next unless File.directory?(plugin_dir)
 
       if query.to_s.empty?
+        #puts "This #{plugin} push onto #{plugins}"
         plugins << plugin
       elsif plugin.casecmp(query) == 0
+        #puts "This #{plugin} push onto #{plugins} and break"
         plugins << plugin
         break
       end
